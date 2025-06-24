@@ -8,6 +8,9 @@
     "dist"
   ],
   "exports": {
+    "./button": "./src/button.tsx",
+    "./card": "./src/card.tsx",
+    "./appbar": "./src/appbar.tsx",
     "./styles.css": "./dist/index.css",
     "./*": "./dist/*.js"
   },
