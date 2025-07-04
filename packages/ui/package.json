@@ -10,7 +10,10 @@
   "exports": {
     "./button": "./src/button.tsx",
     "./card": "./src/card.tsx",
+    "./center": "./src/center.tsx",
     "./appbar": "./src/appbar.tsx",
+    "./select": "./src/select.tsx",
+    "./textInput": "./src/textInput.tsx",
     "./styles.css": "./dist/index.css",
     "./*": "./dist/*.js"
   },
