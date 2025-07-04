@@ -7,9 +7,11 @@ import { TextInput } from "@repo/ui/textInput";
 import { createOnRampTransaction } from "../app/lib/actions/createOnrampTransaction";
 
 const SUPPORTED_BANKS = [{
+    id: 1,
     name: "HDFC Bank",
     redirectUrl: "https://netbanking.hdfcbank.com"
 }, {
+    id: 2,
     name: "Axis Bank",
     redirectUrl: "https://www.axisbank.com/"
 }];
@@ -20,7 +22,7 @@ export const AddMoney = () => {
     const [value, setValue] = useState(0)
     return <Card title="Add Money">
     <div className="w-full">
-        <TextInput label={"Amount"} placeholder={"Amount"} onChange={(val) => {
+        <TextInput label={"Amount"} value={value.toString()} placeholder={"Amount"} onChange={(val) => {
             setValue(Number(val))
         }} />
         <div className="py-4 text-left">

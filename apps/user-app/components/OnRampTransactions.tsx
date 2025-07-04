@@ -1,16 +1,14 @@
-import { Card } from "@repo/ui/card"
+"use client"
 
-export const OnRampTransactions = ({
-    transactions
-}: {
-    transactions: {
-        time: Date,
-        amount: number,
-        // TODO: Can the type of `status` be more specific?
-        status: string,
-        provider: string
-    }[]
-}) => {
+import { Card } from "@repo/ui/card"
+import { useAtomValue } from "jotai"
+import { onRampTransactionsAtom } from "@repo/store/transactions"
+
+export const OnRampTransactions = () => {
+    const transactions = useAtomValue(onRampTransactionsAtom);
+
+    console.log("OnRampTransactions from the card", transactions);
+
     if (!transactions.length) {
         return <Card title="Recent Transactions">
             <div className="text-center pb-8 pt-8">
@@ -20,7 +18,7 @@ export const OnRampTransactions = ({
     }
     return <Card title="Recent Transactions">
         <div className="pt-2">
-            {transactions.map(t => <div className="flex justify-between">
+            {transactions.map(t => <div key={t.id} className="flex justify-between">
                 <div>
                     <div className="text-sm">
                         Received INR

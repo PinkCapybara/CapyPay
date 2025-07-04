@@ -3,45 +3,99 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import prisma from "@repo/db/client";
 
-export async function p2pTransfer(to: string, amount: number) {
+export async function p2pTransfer(
+    toIdentifier: string, 
+    amount: number,
+    identifierType: "number" | "email"
+) {
     const session = await getServerSession(authOptions);
-    const from = session?.user?.id;
-    if (!from) {
-        return {
-            message: "Error while sending"
-        }
+    const fromUserId = session?.user?.id;
+    
+    if (!fromUserId) {
+        throw new Error("You must be logged in to send money");
     }
+
+    if (amount <= 0) {
+        throw new Error("Amount must be greater than zero");
+    }
+
     const toUser = await prisma.user.findFirst({
-        where: {
-            number: to
-        }
+        where: identifierType === "number" 
+            ? { number: toIdentifier }
+            : { email: toIdentifier }
     });
 
     if (!toUser) {
-        return {
-            message: "User not found"
-        }
+        throw new Error(`User not found with this ${identifierType}`);
     }
-    await prisma.$transaction(async (tx) => {
-        await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)} FOR UPDATE`;
 
-        const fromBalance = await tx.balance.findUnique({
-            where: { userId: from },
-          });
-          if (!fromBalance || fromBalance.amount < amount) {
-            throw new Error('Insufficient funds');
-          }
+    if (toUser.id === fromUserId) {
+        throw new Error("You cannot send money to yourself");
+    }
 
-          await tx.balance.update({
-            where: { userId: from },
-            data: { amount: { decrement: amount } },
-          });
+    if (!Number.isInteger(amount) || amount <= 0) {
+        throw new Error("Invalid amount format");
+    }
 
-          await tx.balance.update({
-            where: { userId: toUser.id },
-            data: { amount: { increment: amount } },
-
-            //add entry to p2p table in database
-          });
+    const transactionRecord = await prisma.p2pTransaction.create({
+        data: {
+            status: "Processing",
+            amount: amount,
+            timestamp: new Date(),
+            fromUserId: fromUserId,
+            toUserId: toUser.id
+        }
     });
+
+    try {
+        await prisma.$transaction(async (tx) => {
+            // Lock sender's balance for update      
+            await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${fromUserId} FOR UPDATE`;
+
+            const fromBalance = await tx.balance.findUnique({
+                where: { userId: fromUserId },
+            });
+
+            if (!fromBalance) {
+                throw new Error("Sender account balance not found");
+            }
+
+            if (fromBalance.amount < amount) {
+                throw new Error("Insufficient funds");
+            }
+
+            await tx.balance.update({
+                where: { userId: fromUserId },
+                data: { amount: { decrement: amount } },
+            });
+
+            await tx.balance.upsert({
+                where: { userId: toUser.id },
+                update: { amount: { increment: amount } },
+                create: {
+                    userId: toUser.id,
+                    amount: amount,
+                    locked: 0
+                }
+            });
+
+            await tx.p2pTransaction.update({
+                where: { id: transactionRecord.id },
+                data: { status: "Success" }
+            });
+        });
+
+        return { 
+            message: `Successfully sent ₹${(amount / 100)} to ${toUser.name || toIdentifier}` 
+        };
+    } catch (error: any) {
+        console.error("P2P Transfer Error:", error);
+
+        await prisma.p2pTransaction.update({
+            where: { id: transactionRecord.id },
+            data: { 
+                status: "Failure",
+            }
+        });
+    }
 }

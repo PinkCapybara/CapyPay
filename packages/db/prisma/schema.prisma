@@ -23,8 +23,8 @@ model User {
   OnRampTransaction OnRampTransaction[]
   OffRampTransaction OffRampTransaction[]
   Balance           Balance[]
-  sentTransfers     p2pTransfer[]       @relation(name: "FromUserRelation")
-  receivedTransfers p2pTransfer[]       @relation(name: "ToUserRelation")
+  sentTransfers     p2pTransaction[]       @relation(name: "FromUserRelation")
+  receivedTransfers p2pTransaction[]       @relation(name: "ToUserRelation")
 }
 
 model Merchant {
@@ -34,7 +34,7 @@ model Merchant {
   auth_type AuthType
 }
 
-model p2pTransfer {
+model p2pTransaction {
   id         Int          @id @default(autoincrement())
   status     TxnStatus
   amount     Int

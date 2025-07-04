@@ -2,9 +2,8 @@ import { SidebarItem } from "../../components/SidebarItem";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../lib/auth";
 import { redirect } from "next/navigation";
-import prisma from '@repo/db/client';
+import { fetchBalance, fetchOffRampTransactions, fetchOnRampTransactions, fetchP2PTransfers } from "../lib/dataFetching";
 import { JotaiProvider } from "./providers";
-import { balanceAtom } from "@repo/store/balance";
 
 export default async function Layout({
   children,
@@ -17,9 +16,12 @@ export default async function Layout({
   }
 
   const balance = await fetchBalance();
+  const onRampTransactions = await fetchOnRampTransactions();
+  const offRampTransactions = await fetchOffRampTransactions(); 
+  const p2pTransfers = await fetchP2PTransfers();
 
   return (
-    <JotaiProvider initialValues={[[balanceAtom, { amount: balance.amount, locked: balance.locked }]]}>
+    <JotaiProvider initialBalance={balance} onRampTxns={onRampTransactions} offRampTxns={offRampTransactions} p2pTransfers={p2pTransfers}>
     <div className="flex">
         <div className="w-72 border-r border-slate-300 min-h-screen mr-4 pt-28">
             <div>
@@ -31,7 +33,7 @@ export default async function Layout({
         </div>
             {children}
     </div>
-    </JotaiProvider>
+   </JotaiProvider>
   );
 }
 
@@ -59,19 +61,3 @@ function P2PTransferIcon() {
   </svg>
 }
 
-export const fetchBalance = async () => {
-    const session = await getServerSession(authOptions);
-    if (!session?.user || !session.user?.id) {
-        try{
-            const balance = await prisma.balance.findUnique({
-                where: { id: session.user.id },
-                select: { amount: true , locked: true }
-            });   
-            return balance ? { amount: balance.amount, locked: balance.locked } : { amount: 0, locked: 0 };
-        }catch (error) {
-            console.log("Error fetching balance:", error);
-        }
-    }
-
-    return { amount: 0, locked: 0 };
-}
