@@ -36,6 +36,7 @@ model Merchant {
 
 model p2pTransfer {
   id         Int          @id @default(autoincrement())
+  status     TxnStatus
   amount     Int
   timestamp  DateTime
   fromUserId String

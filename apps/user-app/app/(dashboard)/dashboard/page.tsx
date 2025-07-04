@@ -1,12 +1,13 @@
 "use client"
 import { useSession } from "next-auth/react";
+import { useAtomValue } from 'jotai';
+import { loadableBalanceAtom } from '@repo/store/balance';
 
 export default function Dashboard() {
-    const session = useSession();
 
     return <div>
         Dashboard Page
-        {JSON.stringify(session, null, 2)}
+    
     </div>
 }
 

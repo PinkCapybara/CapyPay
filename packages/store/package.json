@@ -13,6 +13,6 @@
     "jotai": "^2.12.5"
   },
   "exports": {
-    "./useBalance": "./src/hooks/useBalance.ts"
+    "./balance": "./src/atoms/balance.ts"
 }
 }
