@@ -15,8 +15,8 @@ export async function p2pTransfer(
         throw new Error("You must be logged in to send money");
     }
 
-    if (amount <= 0) {
-        throw new Error("Amount must be greater than zero");
+    if (!Number.isInteger(amount) || amount <= 0) {
+        throw new Error("Invalid amount format");
     }
 
     const toUser = await prisma.user.findFirst({
@@ -31,10 +31,6 @@ export async function p2pTransfer(
 
     if (toUser.id === fromUserId) {
         throw new Error("You cannot send money to yourself");
-    }
-
-    if (!Number.isInteger(amount) || amount <= 0) {
-        throw new Error("Invalid amount format");
     }
 
     const transactionRecord = await prisma.p2pTransaction.create({
@@ -89,7 +85,7 @@ export async function p2pTransfer(
             message: `Successfully sent ₹${(amount / 100)} to ${toUser.name || toIdentifier}` 
         };
     } catch (error: any) {
-        console.error("P2P Transfer Error:", error);
+        console.log("P2P Transfer Error:", error);
 
         await prisma.p2pTransaction.update({
             where: { id: transactionRecord.id },

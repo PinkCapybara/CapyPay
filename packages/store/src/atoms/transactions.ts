@@ -102,3 +102,27 @@ export const loadableP2PAtom = loadable(
     return txns;
   })
 );
+
+export const addP2PTransferAtom = atom(
+  null,
+  (get, set, transfer: P2PTransfer) => {
+    const current = get(p2pTransfersAtom);
+    set(p2pTransfersAtom, [transfer, ...current]);
+  }
+);
+
+export const addOnRampTransactionAtom = atom(
+  null,
+  (get, set, transaction: OnRampTransaction) => {
+    const current = get(onRampTransactionsAtom);
+    set(onRampTransactionsAtom, [transaction, ...current]);
+  }
+);
+
+export const addOffRampTransactionAtom = atom(
+  null,
+  (get, set, transaction: OffRampTransaction) => {
+    const current = get(offRampTransactionsAtom);
+    set(offRampTransactionsAtom, [transaction, ...current]);
+  }
+);

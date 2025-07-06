@@ -29,7 +29,6 @@ export interface P2PTransfer {
 }
 
 export interface Balance {
-  userId: string;
-  amount: number;
-  locked: number;
+  amount: number; 
+  locked: number; 
 }

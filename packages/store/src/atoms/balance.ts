@@ -11,9 +11,12 @@ export const fetchBalanceAtom = atom(
     try {
       const response = await fetch(domain + apiPath);
       const { balance } = await response.json();
+
+      console.log("Fetched Balance:", balance);
+
       set(balanceAtom, {
-        amount: balance.amount,
-        locked: balance.locked,
+        amount: Number(balance.amount), 
+        locked: Number(balance.locked),
       });
       return balance;
     } catch (error) {
@@ -35,12 +38,11 @@ export const loadableBalanceAtom = loadable(
 );
 
 // Optimistic update atom
-export const updateBalanceAtom = atom(
-  null,
+export const optimisticBalanceUpdateAtom = atom(
+  null, 
   (get, set, updateFn: (current: { amount: number; locked: number }) => { amount: number; locked: number }) => {
     const current = get(balanceAtom);
-    if (current !== null) {
-      set(balanceAtom, updateFn(current));
-    }
+    const updated = updateFn(current);
+    set(balanceAtom, updated);
   }
 );

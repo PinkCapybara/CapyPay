@@ -22,7 +22,7 @@ model User {
   auth_type         AuthType  @default(Credentials)
   OnRampTransaction OnRampTransaction[]
   OffRampTransaction OffRampTransaction[]
-  Balance           Balance[]
+  Balance           Balance?
   sentTransfers     p2pTransaction[]       @relation(name: "FromUserRelation")
   receivedTransfers p2pTransaction[]       @relation(name: "ToUserRelation")
 }
