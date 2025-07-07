@@ -60,7 +60,7 @@ model OffRampTransaction {
   id         Int       @id @default(autoincrement())
   status     TxnStatus
   token      String    @unique
-  provider   String    //Bank
+  vpa        String    // Virtual Payment Address
   amount     Int
   startTime  DateTime
   userId     String

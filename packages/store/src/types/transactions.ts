@@ -14,7 +14,7 @@ export interface OffRampTransaction {
   id: number;
   status: TxnStatus;
   token: string;
-  provider: string;
+  vpa: string;
   amount: number;
   time: Date;
 }

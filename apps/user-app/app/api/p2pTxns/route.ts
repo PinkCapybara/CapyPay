@@ -18,6 +18,7 @@ export async function GET() {
             { toUserId: session.user.id }
           ]
         },
+        orderBy: { timestamp: 'desc' },
         include: {
           fromUser: {
             select: { name: true, email: true }

@@ -1,13 +1,24 @@
 "use client";
 
 import { Card } from "@repo/ui/card";
-import { useAtomValue } from "jotai";
-import { balanceAtom } from "@repo/store/balance";
+import { useAtomValue, useSetAtom } from "jotai";
+import { balanceAtom, fetchBalanceAtom } from "@repo/store/balance";
+import { useEffect } from "react";
 
 export const BalanceCard = () => {
     const balance = useAtomValue(balanceAtom);
+    const refreshBalance = useSetAtom(fetchBalanceAtom);
     const { amount, locked } = balance;
     const total = amount + locked;
+
+    useEffect(() => {
+  
+    const intervalId = setInterval(() => {
+      refreshBalance();
+    }, 15000); 
+
+    return () => clearInterval(intervalId);
+  }, []);
 
     return (
         <Card title={"Balance"}>

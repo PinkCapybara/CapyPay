@@ -12,8 +12,6 @@ export const fetchBalanceAtom = atom(
       const response = await fetch(domain + apiPath);
       const { balance } = await response.json();
 
-      console.log("Fetched Balance:", balance);
-
       set(balanceAtom, {
         amount: Number(balance.amount), 
         locked: Number(balance.locked),
@@ -24,17 +22,6 @@ export const fetchBalanceAtom = atom(
       throw error;
     }
   }
-);
-
-// Derived state for UI consumption
-export const loadableBalanceAtom = loadable(
-  atom(async (get) => {
-    const balance = get(balanceAtom);
-    if (balance === null) {
-      return get(fetchBalanceAtom);
-    }
-    return balance;
-  })
 );
 
 // Optimistic update atom

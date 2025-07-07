@@ -11,7 +11,8 @@ export async function GET() {
 
   try {
     const txns = await prisma.offRampTransaction.findMany({
-        where: { userId: session.user.id }
+        where: { userId: session.user.id },
+        orderBy: { startTime: 'desc' }
     })
 
     return NextResponse.json({

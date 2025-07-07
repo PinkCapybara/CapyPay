@@ -2,18 +2,18 @@
 
 import { Card } from "@repo/ui/card"
 import { useAtomValue, useSetAtom } from "jotai"
-import { onRampTransactionsAtom ,fetchOnRampTransactionsAtom } from "@repo/store/transactions"
+import { offRampTransactionsAtom, fetchOffRampTransactionsAtom } from "@repo/store/transactions"
 import { TxnStatus } from "@repo/store/types"
 import { useEffect } from "react"
 
-export const OnRampTransactions = () => {
-  const transactions = useAtomValue(onRampTransactionsAtom);
-  const refreshOnRampTransactions = useSetAtom(fetchOnRampTransactionsAtom);
+export const OffRampTransactions = () => {
+  const transactions = useAtomValue(offRampTransactionsAtom);
+  const refreshOffRampTransactions = useSetAtom(fetchOffRampTransactionsAtom);
 
   useEffect(() => {
   
     const intervalId = setInterval(() => {
-      refreshOnRampTransactions();
+      refreshOffRampTransactions();
     }, 15000); 
 
     return () => clearInterval(intervalId);
@@ -21,9 +21,9 @@ export const OnRampTransactions = () => {
 
   if (!transactions.length) {
     return (
-      <Card title="Recent Deposits">
+      <Card title="Recent Withdrawals">
         <div className="text-center py-4 text-sm text-slate-600">
-          No Recent Deposit Transactions
+          No Recent Withdrawal Transactions
         </div>
       </Card>
     );
@@ -43,7 +43,7 @@ export const OnRampTransactions = () => {
 };
 
   return (
-    <Card title="Recent Deposits" scrollHeight="md">
+    <Card title="Recent Withdrawals" scrollHeight="md">
       <div className="flex flex-col pt-1">
         {transactions.map((t) => (
           <div
@@ -53,7 +53,7 @@ export const OnRampTransactions = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <div className="font-medium text-slate-800">
-                  Added INR to Wallet
+                  Transferred INR to bank
                 </div>
                 <span
                   className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm ${statusClasses(t.status)}`}
@@ -72,8 +72,8 @@ export const OnRampTransactions = () => {
               </div>
             </div>
 
-            <div className="font-semibold text-sm text-green-600">
-              +₹{(t.amount / 100)}
+            <div className="font-semibold text-sm text-red-600">
+              -₹{(t.amount / 100)}
             </div>
           </div>
         ))}

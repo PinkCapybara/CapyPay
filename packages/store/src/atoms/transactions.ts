@@ -73,36 +73,6 @@ export const fetchP2PTransfersAtom = atom(
 );
 
 
-export const loadableOnRampAtom = loadable(
-  atom(async (get) => {
-    const txns = get(onRampTransactionsAtom);
-    if (txns.length === 0) {
-      return get(fetchOnRampTransactionsAtom);
-    }
-    return txns;
-  })
-);
-
-export const loadableOffRampAtom = loadable(
-  atom(async (get) => {
-    const txns = get(offRampTransactionsAtom);
-    if (txns.length === 0) {
-      return get(fetchOffRampTransactionsAtom);
-    }
-    return txns;
-  })
-);
-
-export const loadableP2PAtom = loadable(
-  atom(async (get) => {
-    const txns = get(p2pTransfersAtom);
-    if (txns.length === 0) {
-      return get(fetchP2PTransfersAtom);
-    }
-    return txns;
-  })
-);
-
 export const addP2PTransferAtom = atom(
   null,
   (get, set, transfer: P2PTransfer) => {

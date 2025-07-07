@@ -12,15 +12,18 @@
   },
   "dependencies": {
     "@repo/db": "*",
+    "@repo/redis": "*",
     "@repo/store": "*",
     "@repo/ui": "*",
+    "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "jotai": "^2.12.5",
     "next": "^15.3.0",
     "next-auth": "^4.24.11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.3.0",

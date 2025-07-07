@@ -1,5 +1,5 @@
 {
-  "name": "bank_webhook_handler",
+  "name": "mock_bank_server",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -12,13 +12,15 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@repo/db": "*",
-    "@repo/redis": "*",
     "@types/express": "^5.0.3",
     "axios": "^1.10.0",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "esbuild": "^0.25.5",
     "express": "^5.1.0",
-    "node-cron": "^4.2.0"
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
   }
 }

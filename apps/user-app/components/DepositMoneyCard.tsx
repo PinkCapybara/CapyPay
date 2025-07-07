@@ -9,19 +9,11 @@ import { addOnRampTransactionAtom } from "@repo/store/transactions";
 import { useSetAtom } from "jotai";
 import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from 'react-toastify';
+import { SUPPORTED_BANKS } from "../app/lib/supportedBanks";
 import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 
-const SUPPORTED_BANKS = [{
-    id: 1,
-    name: "HDFC Bank",
-    redirectUrl: "https://netbanking.hdfcbank.com"
-}, {
-    id: 2,
-    name: "Axis Bank",
-    redirectUrl: "https://www.axisbank.com/"
-}];
-
-export const AddMoney = () => {
+export const DepositMoney = () => {
     const { data }: any = useSession();
     const [redirectUrl, setRedirectUrl] = useState(SUPPORTED_BANKS[0]?.redirectUrl);
     const [provider, setProvider] = useState(SUPPORTED_BANKS[0]?.name || "");
@@ -49,24 +41,31 @@ export const AddMoney = () => {
         }
 
         setIsLoading(true);
-        const tempId = Date.now();
-
-        // Optimistically add the transaction
-        if (data?.user?.id) {
-            addOnRampTxn({
-                id: tempId,
-                status: "Processing",
-                token: `temp_${tempId}`,
-                provider,
-                amount:amountValue,
-                time: new Date()
-            });
-        }
 
         try {
-            await createOnRampTransaction(provider, amountValue);
+            const tempId = Date.now();
+
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_MOCK_BANK_URL}/onRamp`, {
+                amount: amountValue,
+                callbackUrl: process.env.NEXT_PUBLIC_BANK_CALLBACK_URL
+            })  
+
+            // Temporarily add the transaction
+            if (data?.user?.id) {
+                addOnRampTxn({
+                    id: tempId,
+                    status: "Processing",
+                    token: response.data.token,
+                    provider,
+                    amount:amountValue,
+                    time: new Date()
+                });
+            }
+
+            await createOnRampTransaction(response.data.token , provider, amountValue);
         } catch (error: any) {
             toast.error(error.message || "An unexpected error occurred");
+            console.log(error);
         } finally {
             setIsLoading(false);
             window.open(redirectUrl || "", "_blank");

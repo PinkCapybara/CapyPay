@@ -79,9 +79,8 @@ export function SendCard() {
     };
 
     return (
-        <div className="w-full">
-            <ToastContainer position="top-right" autoClose={5000} />
-        
+        <div>
+            <ToastContainer position="top-right" autoClose={5000} />      
                 <Card title="Send Money">
                     <div className="w-full pt-2 space-y-4">
                         <div className="flex space-x-4">
@@ -139,8 +138,7 @@ export function SendCard() {
                             </Button>
                         </div>
                     </div>
-                </Card>
-          
+                </Card>        
         </div>
     )
 }
