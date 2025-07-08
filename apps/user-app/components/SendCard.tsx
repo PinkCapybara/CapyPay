@@ -43,7 +43,6 @@ export function SendCard() {
         setIsLoading(true);
         
         try {
-
             addP2PTransfer({
                 id: Date.now(),
                 time: new Date(),

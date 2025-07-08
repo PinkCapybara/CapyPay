@@ -93,5 +93,7 @@ export async function p2pTransfer(
                 status: "Failure",
             }
         });
+
+        throw new Error(error.message);
     }
 }
