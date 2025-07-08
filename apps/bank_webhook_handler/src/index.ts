@@ -4,6 +4,8 @@ import db from '@repo/db/client';
 import cron from 'node-cron';
 import { sweepOffRamps } from './offRampSweeper';
 import { sweepOnRamps } from './onRampSweeper';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const PORT =  3003;
@@ -60,9 +62,9 @@ app.post('/bankWebhook', async (req, res) => {
 
         await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${txn.userId} FOR UPDATE`;
         
-        await db.onRampTransaction.update({ where: { id: txn.id }, data: { status } })
+        await tx.onRampTransaction.update({ where: { id: txn.id }, data: { status } })
         if(status === 'Success'){
-            db.balance.update({ where: { userId: txn.userId }, data: { amount: { increment: txn.amount } } })
+            await tx.balance.update({ where: { userId: txn.userId }, data: { amount: { increment: txn.amount } } });
         }
     });
 

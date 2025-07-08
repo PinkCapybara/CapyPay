@@ -2,7 +2,7 @@ import db from '@repo/db/client';
 import axios from 'axios';
 
 export const sweepOnRamps = async () => {
-  console.log('n-Ramp sweep started');
+  console.log('on-Ramp sweep started');
   
   const pendings = await db.onRampTransaction.findMany({
     where: { status: 'Processing' }, select: { token: true, id: true, userId: true, amount: true }
@@ -22,9 +22,9 @@ export const sweepOnRamps = async () => {
 
         await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${txn.userId} FOR UPDATE`;
         
-        await db.onRampTransaction.update({ where: { id: txn.id }, data: { status } })
+        await tx.onRampTransaction.update({ where: { id: txn.id }, data: { status } })
         if(status === 'Success'){
-            db.balance.update({ where: { userId: txn.userId }, data: { amount: { increment: txn.amount } } })
+            await tx.balance.update({ where: { userId: txn.userId }, data: { amount: { increment: txn.amount } } })
         }
       });
       //await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${txn.userId} FOR UPDATE`;

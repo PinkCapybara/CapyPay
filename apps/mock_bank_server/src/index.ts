@@ -5,6 +5,9 @@ import express from 'express';
 import axios from 'axios';
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
+import cron from 'node-cron';
+import dotenv from 'dotenv';
+dotenv.config();
 
 enum OnRampStatus {
   Processing = 'Processing',
@@ -43,8 +46,6 @@ app.post('/onRamp', (req, res) => {
     return;
   }
 
-  console.log(`Received callbackUrl=${callbackUrl}`);
-
   const token = `tok_${uuidv4()}`;
   pendingOnRamps.set(token, {
     amount,
@@ -82,11 +83,12 @@ app.get('/onRamp/status/:token', (req, res) => {
 
 // Background sweeper: process pending on-ramps
 const MAX_RETRIES = 5;
-setInterval(() => {
+const processOnRamps = () => {
+  console.log("sweeper running");
+
   for (const [token, entry] of pendingOnRamps.entries()) {
     if (entry.status !== OnRampStatus.Processing) continue;
 
-    // Prepare new status
     const success = Math.random() < 0.8;
     const newStatus = success ? OnRampStatus.Success : OnRampStatus.Failure;
     const payload = { token, status: newStatus, amount: entry.amount };
@@ -94,7 +96,7 @@ setInterval(() => {
 
     axios.post(entry.callbackUrl, payload, {
       headers: { 'Content-Type': 'application/json', 'X-Bank-Signature': signature },
-      timeout: 5000,
+      timeout: 10000,
     })
     .then(() => {
       console.log(`Webhook delivered: token=${token}, status=${newStatus}`);
@@ -112,6 +114,11 @@ setInterval(() => {
       }
     });
   }
-}, 10000);
+};  
+
+// runs every minute
+cron.schedule('* * * * *', () => {
+  processOnRamps();
+});
 
 app.listen(port, () => console.log(`Mock bank server listening on port ${port}`));

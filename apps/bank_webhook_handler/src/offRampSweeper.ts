@@ -5,7 +5,7 @@ import redis from '@repo/redis/client';
 export const sweepOffRamps = async  () => {
   console.log('Off-ramp sweep started');
   while (true) {
-    const token = await redis.lpop("offramp-queue");
+    const token = await redis.rpop("offramp-queue");
     if (!token) break;
 
     const txn = await db.offRampTransaction.findUnique({
@@ -46,7 +46,7 @@ export const sweepOffRamps = async  () => {
             await tx.balance.update({
             where: { userId: txn.userId },
             data: {
-                amount: { decrement: txn.amount },
+                amount: { increment: txn.amount },
                 locked: { decrement: txn.amount },
             },
             });
@@ -58,7 +58,7 @@ export const sweepOffRamps = async  () => {
 
     } catch (err: any) {
       console.error(`error processing ${token}:`, err.message);
-      await redis.rpush("offramp-queue", token);
+      await redis.lpush("offramp-queue", token);
     }
   }
   console.log('off-ramp sweep complete');
