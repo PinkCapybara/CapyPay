@@ -17,7 +17,7 @@ export const TransactionCard = () => {
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status]}`}
+        className={`rounded-full px-2 py-1 text-xs font-medium ${statusColors[status]}`}
       >
         {status}
       </span>
@@ -34,7 +34,7 @@ export const TransactionCard = () => {
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${typeColors[type]}`}
+        className={`rounded-full px-2 py-1 text-xs font-medium ${typeColors[type]}`}
       >
         {type.toUpperCase()}
       </span>
@@ -43,7 +43,7 @@ export const TransactionCard = () => {
 
   if (transactions.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+      <div className="rounded-xl bg-white p-8 text-center shadow-sm">
         <div className="text-gray-500">
           No transactions found matching your filters
         </div>
@@ -52,15 +52,15 @@ export const TransactionCard = () => {
   }
 
   return (
-    <div className="space-y-2 mb-14">
+    <div className="mb-14 space-y-2">
       {transactions.map((transaction) => (
         <div
           key={`${transaction.type}-${transaction.id}`}
-          className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow"
+          className="rounded-xl bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
         >
-          <div className="flex justify-between items-start">
+          <div className="flex items-start justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-gray-100 p-3 rounded-lg">
+              <div className="rounded-lg bg-gray-100 p-3">
                 {transaction.type === "deposit" ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +148,7 @@ export const TransactionCard = () => {
 
           <div className="mt-3 flex flex-wrap gap-2">
             <TypeBadge type={transaction.type} />
-            <div className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+            <div className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">
               ID: {transaction.id}
             </div>
           </div>

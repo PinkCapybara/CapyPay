@@ -33,7 +33,7 @@ export default async function Layout({
       p2pTransfers={p2pTransfers}
     >
       <div className="flex h-screen overflow-hidden">
-        <div className="sticky top-0 w-72 border-r border-slate-300 min-h-screen mr-4 pt-28">
+        <div className="sticky top-0 mr-4 min-h-screen w-72 border-r border-slate-300 pt-28">
           <div>
             <SidebarItem href={"/dashboard"} icon={<HomeIcon />} title="Home" />
             <SidebarItem
@@ -58,7 +58,7 @@ export default async function Layout({
             />
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto w-full">{children}</div>
+        <div className="w-full flex-1 overflow-y-auto">{children}</div>
       </div>
     </JotaiProvider>
   );
@@ -72,7 +72,7 @@ function HomeIcon() {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className="w-6 h-6"
+      className="h-6 w-6"
     >
       <path
         strokeLinecap="round"
@@ -90,7 +90,7 @@ function P2PTransferIcon() {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className="w-6 h-6"
+      className="h-6 w-6"
     >
       <path
         strokeLinecap="round"
@@ -109,7 +109,7 @@ function TransactionsIcon() {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className="w-6 h-6"
+      className="h-6 w-6"
     >
       <path
         strokeLinecap="round"
@@ -128,7 +128,7 @@ function DepositIcon() {
       viewBox="0 -8 42 42"
       strokeWidth="1"
       stroke="currentColor"
-      className="w-7 h-6"
+      className="h-6 w-7"
     >
       <g transform="scale(24/42)">
         <g
@@ -158,7 +158,7 @@ function WithdrawIcom() {
       viewBox="0 -8 42 42"
       strokeWidth="1"
       stroke="currentColor"
-      className="w-7 h-6"
+      className="h-6 w-7"
     >
       <g transform="scale(24/42)">
         <g

@@ -1,14 +1,7 @@
-// build outputs
-dist/
-build/
+node_modules
+.turbo/
+.cache/
 .next/
 out/
-
-// dependencies
-node_modules/
-
-// versioning files
-package-lock.json
-
-// environment files
-.env*
+build/
+dist/

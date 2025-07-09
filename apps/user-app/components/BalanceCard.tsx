@@ -20,30 +20,30 @@ export const BalanceCard = () => {
   });
 
   return (
-    <div className="bg-gradient-to-r from-purple-700 to-indigo-800 rounded-2xl shadow-xl overflow-hidden">
+    <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-purple-700 to-indigo-800 shadow-xl">
       <div className="p-6 md:p-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-white">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-white md:text-2xl">
             Total Balance
           </h2>
-          <div className="text-3xl md:text-4xl font-bold text-white ">
+          <div className="text-3xl font-bold text-white md:text-4xl">
             {total}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-purple-600 bg-opacity-30 rounded-lg p-4">
-            <div className="text-sm text-purple-200 mb-1">Available</div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="bg-opacity-30 rounded-lg bg-purple-600 p-4">
+            <div className="mb-1 text-sm text-purple-200">Available</div>
             <div className="text-lg font-semibold text-white">{amount}</div>
           </div>
-          <div className="bg-purple-600 bg-opacity-30 rounded-lg p-4">
-            <div className="text-sm text-purple-200 mb-1">Locked</div>
+          <div className="bg-opacity-30 rounded-lg bg-purple-600 p-4">
+            <div className="mb-1 text-sm text-purple-200">Locked</div>
             <div className="text-lg font-semibold text-white">{locked}</div>
           </div>
         </div>
       </div>
 
-      <div className="bg-purple-800 bg-opacity-50 px-4 py-2"></div>
+      <div className="bg-opacity-50 bg-purple-800 px-4 py-2"></div>
     </div>
   );
 };

@@ -11,8 +11,8 @@ interface AppbarProps {
 
 export const Appbar = ({ user, onSignin, onSignout }: AppbarProps) => {
   return (
-    <div className="flex justify-between border-b border-slate-300 px-4 ">
-      <div className="text-4xl font-bold flex flex-col justify-center">
+    <div className="flex justify-between border-b border-slate-300 px-4">
+      <div className="flex flex-col justify-center text-4xl font-bold">
         CapyPAY
       </div>
       <div className="flex flex-col justify-center pt-2">

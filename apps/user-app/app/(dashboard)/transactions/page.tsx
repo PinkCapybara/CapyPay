@@ -5,7 +5,7 @@ import { TransactionCard } from "../../../components/TransactionCard";
 export default function Transaction() {
   return (
     <div className="">
-      <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold">
+      <div className="mb-8 pt-8 text-4xl font-bold text-[#6a51a6]">
         Recent Transactions
       </div>
       <div className="flex-col p-4">

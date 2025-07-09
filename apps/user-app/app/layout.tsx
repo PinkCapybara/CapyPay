@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={geist.className}>
         <Providers>
           <div className="h-screen overflow-hidden bg-[#F8F4FF]">
-            <header className="shrink-0 sticky top-0 z-50 bg-[#F8F4FF]">
+            <header className="sticky top-0 z-50 shrink-0 bg-[#F8F4FF]">
               <AppbarClient />
             </header>
             <div>{children}</div>

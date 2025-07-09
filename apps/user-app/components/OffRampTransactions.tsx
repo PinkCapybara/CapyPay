@@ -26,7 +26,7 @@ export const OffRampTransactions = () => {
   if (!transactions.length) {
     return (
       <Card title="Recent Withdrawals">
-        <div className="text-center py-4 text-sm text-slate-600">
+        <div className="py-4 text-center text-sm text-slate-600">
           No Recent Withdrawal Transactions
         </div>
       </Card>
@@ -52,7 +52,7 @@ export const OffRampTransactions = () => {
         {transactions.map((t) => (
           <div
             key={t.id}
-            className="flex items-center justify-between text-sm p-1 rounded-lg hover:bg-[#E6E6FA] transition cursor-pointer"
+            className="flex cursor-pointer items-center justify-between rounded-lg p-1 text-sm transition hover:bg-[#E6E6FA]"
           >
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
@@ -60,12 +60,12 @@ export const OffRampTransactions = () => {
                   Transferred INR to bank
                 </div>
                 <span
-                  className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm ${statusClasses(t.status)}`}
+                  className={`me-2 rounded-sm px-2.5 py-0.5 text-xs font-medium ${statusClasses(t.status)}`}
                 >
                   {t.status}
                 </span>
               </div>
-              <div className="text-slate-500 text-xs mt-0.5">
+              <div className="mt-0.5 text-xs text-slate-500">
                 {new Date(t.time).toLocaleString("en-IN", {
                   day: "numeric",
                   month: "short",
@@ -76,7 +76,7 @@ export const OffRampTransactions = () => {
               </div>
             </div>
 
-            <div className="font-semibold text-sm text-red-600">
+            <div className="text-sm font-semibold text-red-600">
               -₹{t.amount / 100}
             </div>
           </div>

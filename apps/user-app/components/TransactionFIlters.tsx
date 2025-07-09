@@ -24,13 +24,13 @@ export const TransactionFilters = () => {
   };
 
   return (
-    <div className="h-fit bg-white rounded-xl shadow-sm p-4 mb-6">
+    <div className="mb-6 h-fit rounded-xl bg-white p-4 shadow-sm">
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-gray-700 font-medium">Filter by status:</span>
+        <span className="font-medium text-gray-700">Filter by status:</span>
 
         <button
           onClick={toggleAll}
-          className={`px-4 py-2 rounded-lg transition-colors ${
+          className={`rounded-lg px-4 py-2 transition-colors ${
             filters.length === statusOptions.length
               ? "bg-purple-400 text-white"
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -45,7 +45,7 @@ export const TransactionFilters = () => {
           <button
             key={status}
             onClick={() => toggleFilter(status)}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`rounded-lg px-4 py-2 transition-colors ${
               filters.includes(status)
                 ? "bg-purple-600 text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"

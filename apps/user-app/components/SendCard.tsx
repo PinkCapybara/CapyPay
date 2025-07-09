@@ -89,10 +89,10 @@ export function SendCard() {
     <div>
       <ToastContainer position="top-right" autoClose={5000} />
       <Card title="Send Money">
-        <div className="w-full pt-2 space-y-4">
+        <div className="w-full space-y-4 pt-2">
           <div className="flex space-x-4">
             <button
-              className={`px-4 py-2 rounded-lg ${
+              className={`rounded-lg px-4 py-2 ${
                 searchMethod === "number"
                   ? "bg-[#6a51a6] text-white"
                   : "bg-gray-200"
@@ -102,7 +102,7 @@ export function SendCard() {
               By Number
             </button>
             <button
-              className={`px-4 py-2 rounded-lg ${
+              className={`rounded-lg px-4 py-2 ${
                 searchMethod === "email"
                   ? "bg-[#6a51a6] text-white"
                   : "bg-gray-200"
@@ -137,7 +137,7 @@ export function SendCard() {
             }}
           />
 
-          <div className="pt-4 flex justify-center">
+          <div className="flex justify-center pt-4">
             <Button onClick={handleTransfer} disabled={isLoading}>
               {isLoading ? "Processing..." : "Send Money"}
             </Button>

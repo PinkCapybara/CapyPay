@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
-        <div className="bg-purple-100 text-purple-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 text-purple-600">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-8 w-8"
@@ -23,14 +23,14 @@ export default function NotFound() {
           </svg>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+        <h1 className="mb-2 text-2xl font-bold text-gray-800">
           404 - Page Not Found
         </h1>
-        <p className="text-gray-600 mb-6">
+        <p className="mb-6 text-gray-600">
           The page you're looking for doesn't exist or has been moved.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="flex flex-col justify-center gap-3 sm:flex-row">
           <div>
             <Button
               onClick={() => {

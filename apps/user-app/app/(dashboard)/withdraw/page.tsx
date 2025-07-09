@@ -5,10 +5,10 @@ import { OffRampTransactions } from "../../../components/OffRampTransactions";
 export default async function Withdraw() {
   return (
     <div className="">
-      <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold">
+      <div className="mb-8 pt-8 text-4xl font-bold text-[#6a51a6]">
         Withdraw
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-4">
+      <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
         <div>
           <WithdrawMoney />
         </div>

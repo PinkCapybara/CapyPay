@@ -21,7 +21,7 @@ export function Card({
 
   return (
     <div className={`border p-4 ${className}`}>
-      <h1 className="text-xl border-b pb-2">{title}</h1>
+      <h1 className="border-b pb-2 text-xl">{title}</h1>
       <div className={`overflow-y-auto ${heightClass}`}>{children}</div>
     </div>
   );

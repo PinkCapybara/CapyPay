@@ -5,8 +5,8 @@ import { OnRampTransactions } from "../../../components/OnRampTransactions";
 export default async function Deposit() {
   return (
     <div className="">
-      <div className="text-4xl text-[#6a51a6] pt-8 mb-8 font-bold">Deposit</div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-4">
+      <div className="mb-8 pt-8 text-4xl font-bold text-[#6a51a6]">Deposit</div>
+      <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
         <div className="">
           <DepositMoney />
         </div>

@@ -3,17 +3,17 @@ import { redirect } from "next/navigation";
 
 export const ActionCard = ({ icon, title, description, action, path }: any) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg transform transition-all hover:-translate-y-1 hover:shadow-xl">
+    <div className="transform rounded-xl bg-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
       <div className="p-6">
-        <div className="flex justify-center mb-4">
-          <div className="bg-purple-100 p-4 rounded-full text-purple-700">
+        <div className="mb-4 flex justify-center">
+          <div className="rounded-full bg-purple-100 p-4 text-purple-700">
             {icon}
           </div>
         </div>
-        <h3 className="text-xl font-bold text-center text-gray-800 mb-2">
+        <h3 className="mb-2 text-center text-xl font-bold text-gray-800">
           {title}
         </h3>
-        <div className="text-gray-600 text-center mb-6">{description}</div>
+        <div className="mb-6 text-center text-gray-600">{description}</div>
         {/* <button onClick={()=> {redirect(path)}} className="w-full bg-gradient-to-r from-purple-700 to-indigo-800 text-white py-2 rounded-lg font-medium hover:cursor-pointer">
           {action}
         </button> */}

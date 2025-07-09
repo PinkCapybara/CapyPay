@@ -14,7 +14,7 @@ export const P2PTransactionsCard = () => {
   if (!transactions.length) {
     return (
       <Card title="P2P Transactions">
-        <div className="text-center py-4 text-sm text-slate-600">
+        <div className="py-4 text-center text-sm text-slate-600">
           No P2P transactions yet
         </div>
       </Card>
@@ -48,7 +48,7 @@ export const P2PTransactionsCard = () => {
           return (
             <div
               key={t.id}
-              className="flex items-center justify-between text-sm p-1 rounded-lg hover:bg-[#E6E6FA] transition-all cursor-pointer"
+              className="flex cursor-pointer items-center justify-between rounded-lg p-1 text-sm transition-all hover:bg-[#E6E6FA]"
             >
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
@@ -58,12 +58,12 @@ export const P2PTransactionsCard = () => {
                       : `Received INR From ${counterparty}`}
                   </div>
                   <span
-                    className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm ${statusClasses(t.status)}`}
+                    className={`me-2 rounded-sm px-2.5 py-0.5 text-xs font-medium ${statusClasses(t.status)}`}
                   >
                     {t.status}
                   </span>
                 </div>
-                <div className="text-slate-500 text-xs mt-0.5">
+                <div className="mt-0.5 text-xs text-slate-500">
                   {new Date(t.time).toLocaleString("en-IN", {
                     day: "numeric",
                     month: "short",
@@ -75,7 +75,7 @@ export const P2PTransactionsCard = () => {
               </div>
 
               <div
-                className={`font-semibold text-sm ${isSent ? "text-red-600" : "text-green-600"}`}
+                className={`text-sm font-semibold ${isSent ? "text-red-600" : "text-green-600"}`}
               >
                 {isSent ? "-" : "+"}₹{(t.amount / 100).toFixed(2)}
               </div>
