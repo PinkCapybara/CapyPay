@@ -19,7 +19,7 @@ export const OnRampTransactions = () => {
     }, 15000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  });
 
   if (!transactions.length) {
     return (

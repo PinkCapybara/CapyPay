@@ -85,7 +85,7 @@ export async function p2pTransfer(
     return {
       message: `Successfully sent ₹${amount / 100} to ${toUser.name || toIdentifier}`,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log("P2P Transfer Error:", error);
 
     await prisma.p2pTransaction.update({
@@ -95,6 +95,10 @@ export async function p2pTransfer(
       },
     });
 
-    throw new Error(error.message);
+    throw new Error(
+      error instanceof Error
+        ? error.message
+        : "Failed to complete P2P transfer",
+    );
   }
 }

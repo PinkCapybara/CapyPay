@@ -8,6 +8,7 @@ import { TxnStatus } from "@repo/store/types";
 
 export const P2PTransactionsCard = () => {
   const transactions = useAtomValue(p2pTransfersAtom);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data }: any = useSession();
   const currentUserId = data?.user?.id;
 
@@ -38,8 +39,6 @@ export const P2PTransactionsCard = () => {
     <Card title="P2P Transactions" scrollHeight="md">
       <div className="flex flex-col pt-1">
         {transactions.map((t) => {
-          //why is there a delay in the calculatoin of isSent, initially it is false, everyhing is rendered as it being false
-          //then it is acutally calculated and proper values rendered
           const isSent = t.fromUser.id === currentUserId;
           const counterparty = isSent
             ? t.toUser.name || `User ${t.toUser.id.slice(0, 4)}`

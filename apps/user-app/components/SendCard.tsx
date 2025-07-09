@@ -28,6 +28,7 @@ export function SendCard() {
   const addP2PTransfer = useSetAtom(addP2PTransferAtom);
   const fetchBalance = useSetAtom(fetchBalanceAtom);
   const fetchP2PTransfers = useSetAtom(fetchP2PTransfersAtom);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data }: any = useSession();
   const userId = data?.user?.id;
 
@@ -75,8 +76,10 @@ export function SendCard() {
       } else {
         toast.error("Transfer completed but no confirmation received");
       }
-    } catch (error: any) {
-      toast.error(error.message || "An unexpected error occurred");
+    } catch (error: unknown) {
+      toast.error(
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      );
       console.log("Transfer Error:", error);
     } finally {
       await fetchBalance();

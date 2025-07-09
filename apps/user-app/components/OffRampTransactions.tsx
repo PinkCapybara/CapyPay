@@ -21,7 +21,7 @@ export const OffRampTransactions = () => {
     }, 15000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  });
 
   if (!transactions.length) {
     return (

@@ -2,7 +2,6 @@
 
 import { ActionCard } from "@repo/ui/ActionCard";
 import { FeatureCard } from "@repo/ui/FeatureCard";
-import { Button } from "@repo/ui/button";
 import { actionCards } from "../../lib/actions";
 import { features } from "../../lib/features";
 

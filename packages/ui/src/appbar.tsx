@@ -4,8 +4,9 @@ interface AppbarProps {
   user?: {
     name?: string | null;
   };
-  // TODO: can u figure out what the type should be here?
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSignin: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onSignout: any;
 }
 

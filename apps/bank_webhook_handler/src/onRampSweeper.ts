@@ -35,11 +35,13 @@ export const sweepOnRamps = async () => {
           });
         }
       });
-      //await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${txn.userId} FOR UPDATE`;
 
       console.log(`On-Ramp ${txn.token} processed: ${status}`);
-    } catch (err: any) {
-      console.error(`On-Ramp ${txn.token} error:`, err.message);
+    } catch (err: unknown) {
+      console.error(
+        `On-Ramp ${txn.token} error:`,
+        err instanceof Error ? err.message : err,
+      );
     }
   }
   console.log("On-Ramp sweep complete");

@@ -1,7 +1,22 @@
 import { Button } from "./button";
 import { redirect } from "next/navigation";
+import type { ReactNode } from "react";
 
-export const ActionCard = ({ icon, title, description, action, path }: any) => {
+interface ActionCardProps {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  action: string;
+  path: string;
+}
+
+export const ActionCard = ({
+  icon,
+  title,
+  description,
+  action,
+  path,
+}: ActionCardProps) => {
   return (
     <div className="transform rounded-xl bg-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
       <div className="p-6">

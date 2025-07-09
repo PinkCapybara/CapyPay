@@ -26,7 +26,7 @@ export const TransactionCard = () => {
 
   // Type badge component
   const TypeBadge = ({ type }: { type: string }) => {
-    const typeColors: any = {
+    const typeColors: Record<string, string> = {
       deposit: "bg-blue-100 text-blue-800",
       withdrawal: "bg-purple-100 text-purple-800",
       p2p: "bg-indigo-100 text-indigo-800",

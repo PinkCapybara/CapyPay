@@ -54,8 +54,11 @@ export const sweepOffRamps = async () => {
       });
 
       console.log(`token ${token} processed: ${status}`);
-    } catch (err: any) {
-      console.error(`error processing ${token}:`, err.message);
+    } catch (err: unknown) {
+      console.error(
+        `error processing ${token}:`,
+        err instanceof Error ? err.message : err,
+      );
       await redis.lpush("offramp-queue", token);
     }
   }

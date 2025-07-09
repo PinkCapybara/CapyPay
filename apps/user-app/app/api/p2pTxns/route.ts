@@ -46,7 +46,8 @@ export async function GET() {
       },
       { status: 200 },
     );
-  } catch (e) {
+  } catch (err) {
+    console.error("Error fetching transactions:", err);
     return NextResponse.json(
       { error: "Failed to fetch transactions" },
       { status: 500 },

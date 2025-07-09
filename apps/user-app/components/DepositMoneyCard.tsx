@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 export const DepositMoney = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data }: any = useSession();
   const [redirectUrl, setRedirectUrl] = useState(
     SUPPORTED_BANKS[0]?.redirectUrl,
@@ -68,8 +69,10 @@ export const DepositMoney = () => {
       }
 
       await createOnRampTransaction(response.data.token, provider, amountValue);
-    } catch (error: any) {
-      toast.error(error.message || "An unexpected error occurred");
+    } catch (error: unknown) {
+      toast.error(
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      );
       console.log(error);
     } finally {
       setIsLoading(false);

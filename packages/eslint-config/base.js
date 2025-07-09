@@ -4,6 +4,16 @@ import turboPlugin from "eslint-plugin-turbo";
 import tseslint from "typescript-eslint";
 import onlyWarn from "eslint-plugin-only-warn";
 
+const ignorePatterns = [
+  "**/node_modules/**",
+  "**/dist/**",
+  "**/build/**",
+  "**/.next/**",
+  "**/.turbo/**",
+  "**/.husky/**",
+  "**/.github/**"
+];
+
 /**
  * A shared ESLint configuration for the repository.
  *
@@ -27,6 +37,6 @@ export const config = [
     },
   },
   {
-    ignores: ["dist/**"],
+    ignores: ignorePatterns,
   },
 ];

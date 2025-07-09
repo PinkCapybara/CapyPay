@@ -53,7 +53,11 @@ export async function createOfframpTransaction(amount: number, vpa: string) {
     await redis.lpush("offramp-queue", result.token);
 
     return result;
-  } catch (err: any) {
-    throw new Error(err.message || "Failed to create off-ramp transaction");
+  } catch (err: unknown) {
+    throw new Error(
+      err instanceof Error
+        ? err.message
+        : "Failed to create off-ramp transaction",
+    );
   }
 }

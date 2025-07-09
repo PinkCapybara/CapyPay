@@ -27,7 +27,7 @@ export default function NotFound() {
           404 - Page Not Found
         </h1>
         <p className="mb-6 text-gray-600">
-          The page you're looking for doesn't exist or has been moved.
+          The page you&#39;re looking for doesn&#39;t exist or has been moved.
         </p>
 
         <div className="flex flex-col justify-center gap-3 sm:flex-row">

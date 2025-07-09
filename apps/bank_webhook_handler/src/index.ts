@@ -73,7 +73,7 @@ app.post("/bankWebhook", async (req, res) => {
     });
 
     res.status(200).json({ message: "Webhook processed" });
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("Webhook handler error:", err);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -85,10 +85,10 @@ app.listen(PORT, () => {
 
 // schedule to run every minute
 cron.schedule("* * * * *", () => {
-  sweepOffRamps().catch((err: any) =>
+  sweepOffRamps().catch((err: unknown) =>
     console.log("OffRamp Sweeper crashed:", err),
   );
-  sweepOnRamps().catch((err: any) =>
+  sweepOnRamps().catch((err: unknown) =>
     console.log("OnRamp Sweeper crashed:", err),
   );
 });

@@ -15,6 +15,7 @@ coverage
 # next.js
 .next/
 out/
+dist/
 build/
 .swc/
 
@@ -37,9 +38,3 @@ yarn-error.log*
 # Turborepo artifacts
 .turbo/
 .cache/
-
-# ui
-dist/
-
-# Editor and IDE files
-.vscode/ 

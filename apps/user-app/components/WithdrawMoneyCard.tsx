@@ -61,8 +61,10 @@ export const WithdrawMoney = () => {
       }));
 
       toast.success("Withdrawal successful! Funds will be transferred shortly");
-    } catch (error: any) {
-      toast.error(error.message || "An unexpected error occurred");
+    } catch (error: unknown) {
+      toast.error(
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      );
       console.log(error);
     } finally {
       setIsLoading(false);

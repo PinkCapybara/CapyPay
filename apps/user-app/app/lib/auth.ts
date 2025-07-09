@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import db from "@repo/db/client";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -126,7 +127,6 @@ export const authOptions = {
               },
             });
 
-            // Create balance record for new user
             await db.balance.create({
               data: {
                 userId: user.id,
@@ -143,7 +143,6 @@ export const authOptions = {
       }
       return true;
     },
-    // TODO: can u fix the type here? Using any is bad
     async session({ token, session }: any) {
       if (session.user) {
         session.user.id = token.id as string;

@@ -5,7 +5,11 @@
   "scripts": {
     "build": "npx esbuild ./src/index.ts --bundle --platform=node --outfile=dist/index.js",
     "start": "node dist/index.js",
-    "dev": "npm run build && npm run start"
+    "dev": "npm run build && npm run start",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,json}\"",
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx,json}\"",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix --max-warnings=0"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +17,8 @@
   "description": "",
   "dependencies": {
     "@types/express": "^5.0.3",
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -24,5 +30,6 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.19"
-  }
+  },
+  "type": "module"
 }

@@ -33,7 +33,11 @@ app.use(express.json());
 const pendingOnRamps = new Map<string, OnRampEntry>();
 
 // Compute HMAC signature
-function signPayload(payload: any) {
+function signPayload(payload: {
+  token: string;
+  status: OnRampStatus;
+  amount: number;
+}) {
   const hmac = crypto.createHmac("sha256", SECRET_KEY);
   hmac.update(JSON.stringify(payload));
   return hmac.digest("hex");

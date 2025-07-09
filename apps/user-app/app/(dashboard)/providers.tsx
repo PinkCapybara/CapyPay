@@ -53,6 +53,7 @@ function Hydrate({
   offRampTxns?: OffRampTxnType[];
   p2pTransfers?: P2PTransferType[];
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const tuples: [any, any][] = [[balanceAtom, balance]];
 
   if (onRampTxns) tuples.push([onRampTransactionsAtom, onRampTxns]);
