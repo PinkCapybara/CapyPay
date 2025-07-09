@@ -1,0 +1,14 @@
+// build outputs
+dist/
+build/
+.next/
+out/
+
+// dependencies
+node_modules/
+
+// versioning files
+package-lock.json
+
+// environment files
+.env*

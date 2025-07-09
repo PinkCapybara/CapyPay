@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Card } from "@repo/ui/card";
 import { useAtomValue } from "jotai";
@@ -40,7 +40,7 @@ export const P2PTransactionsCard = () => {
         {transactions.map((t) => {
           //why is there a delay in the calculatoin of isSent, initially it is false, everyhing is rendered as it being false
           //then it is acutally calculated and proper values rendered
-          const isSent = (t.fromUser.id === currentUserId);
+          const isSent = t.fromUser.id === currentUserId;
           const counterparty = isSent
             ? t.toUser.name || `User ${t.toUser.id.slice(0, 4)}`
             : t.fromUser.name || `User ${t.fromUser.id.slice(0, 4)}`;
@@ -53,7 +53,9 @@ export const P2PTransactionsCard = () => {
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <div className="font-medium text-slate-800">
-                    {isSent ? `Sent INR To ${counterparty}` : `Received INR From ${counterparty}`}
+                    {isSent
+                      ? `Sent INR To ${counterparty}`
+                      : `Received INR From ${counterparty}`}
                   </div>
                   <span
                     className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm ${statusClasses(t.status)}`}
@@ -62,20 +64,20 @@ export const P2PTransactionsCard = () => {
                   </span>
                 </div>
                 <div className="text-slate-500 text-xs mt-0.5">
-                  {new Date(t.time).toLocaleString('en-IN', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
+                  {new Date(t.time).toLocaleString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
                   })}
                 </div>
               </div>
 
               <div
-                className={`font-semibold text-sm ${isSent ? 'text-red-600' : 'text-green-600'}`}
+                className={`font-semibold text-sm ${isSent ? "text-red-600" : "text-green-600"}`}
               >
-                {isSent ? '-' : '+'}₹{(t.amount / 100).toFixed(2)}
+                {isSent ? "-" : "+"}₹{(t.amount / 100).toFixed(2)}
               </div>
             </div>
           );
@@ -84,4 +86,3 @@ export const P2PTransactionsCard = () => {
     </Card>
   );
 };
-

@@ -1,18 +1,18 @@
-'use client';
-import { Provider } from 'jotai';
-import { useHydrateAtoms } from 'jotai/utils';
-import { balanceAtom } from '@repo/store/balance';
+"use client";
+import { Provider } from "jotai";
+import { useHydrateAtoms } from "jotai/utils";
+import { balanceAtom } from "@repo/store/balance";
 import type {
   OnRampTransaction as OnRampTxnType,
   OffRampTransaction as OffRampTxnType,
   P2PTransfer as P2PTransferType,
-} from '@repo/store/types';
+} from "@repo/store/types";
 
 import {
   onRampTransactionsAtom,
   offRampTransactionsAtom,
   p2pTransfersAtom,
-} from '@repo/store/transactions';
+} from "@repo/store/transactions";
 
 interface JotaiProviderProps {
   initialBalance: { amount: number; locked: number };
@@ -53,13 +53,11 @@ function Hydrate({
   offRampTxns?: OffRampTxnType[];
   p2pTransfers?: P2PTransferType[];
 }) {
-  const tuples: [any, any][] = [
-    [balanceAtom, balance],
-  ];
+  const tuples: [any, any][] = [[balanceAtom, balance]];
 
-  if (onRampTxns)     tuples.push([onRampTransactionsAtom, onRampTxns]);
-  if (offRampTxns)    tuples.push([offRampTransactionsAtom, offRampTxns]);
-  if (p2pTransfers)   tuples.push([p2pTransfersAtom, p2pTransfers]);
+  if (onRampTxns) tuples.push([onRampTransactionsAtom, onRampTxns]);
+  if (offRampTxns) tuples.push([offRampTransactionsAtom, offRampTxns]);
+  if (p2pTransfers) tuples.push([p2pTransfersAtom, p2pTransfers]);
 
   useHydrateAtoms(tuples);
 

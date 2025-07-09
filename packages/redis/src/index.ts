@@ -1,16 +1,15 @@
-import Redis from 'ioredis';
+import Redis from "ioredis";
 
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 
 // In development, reuse global to avoid multiple connections (Next.js hot reload)
 declare global {
   var __redisClient: Redis | undefined;
 }
 
-const client: Redis =
-  global.__redisClient || new Redis(redisUrl);
+const client: Redis = global.__redisClient || new Redis(redisUrl);
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   global.__redisClient = client;
 }
 
@@ -22,6 +21,5 @@ if (process.env.NODE_ENV === 'development') {
 // }
 
 // main();
-
 
 export default client;

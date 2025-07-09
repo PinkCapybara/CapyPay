@@ -1,18 +1,18 @@
 // A simple Express mock bank server for on-ramp and off-ramp transactions
 
-import cors from 'cors';
-import express from 'express';
-import axios from 'axios';
-import crypto from 'crypto';
-import { v4 as uuidv4 } from 'uuid';
-import cron from 'node-cron';
-import dotenv from 'dotenv';
+import cors from "cors";
+import express from "express";
+import axios from "axios";
+import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
+import cron from "node-cron";
+import dotenv from "dotenv";
 dotenv.config();
 
 enum OnRampStatus {
-  Processing = 'Processing',
-  Success = 'Success',
-  Failure = 'Failure',
+  Processing = "Processing",
+  Success = "Success",
+  Failure = "Failure",
 }
 
 interface OnRampEntry {
@@ -24,7 +24,7 @@ interface OnRampEntry {
 
 const app = express();
 const port = 3004;
-const SECRET_KEY = process.env.BANK_WEBHOOK_SECRET || 'default_secret_key';
+const SECRET_KEY = process.env.BANK_WEBHOOK_SECRET || "default_secret_key";
 
 app.use(cors());
 app.use(express.json());
@@ -34,15 +34,15 @@ const pendingOnRamps = new Map<string, OnRampEntry>();
 
 // Compute HMAC signature
 function signPayload(payload: any) {
-  const hmac = crypto.createHmac('sha256', SECRET_KEY);
+  const hmac = crypto.createHmac("sha256", SECRET_KEY);
   hmac.update(JSON.stringify(payload));
-  return hmac.digest('hex');
+  return hmac.digest("hex");
 }
 
-app.post('/onRamp', (req, res) => {
+app.post("/onRamp", (req, res) => {
   const { amount, callbackUrl } = req.body;
   if (!amount || !callbackUrl) {
-    res.status(400).json({ error: 'amount and callbackUrl are required' });
+    res.status(400).json({ error: "amount and callbackUrl are required" });
     return;
   }
 
@@ -58,24 +58,28 @@ app.post('/onRamp', (req, res) => {
   res.status(200).json({ token });
 });
 
-app.post('/offRamp', (req, res) => {
+app.post("/offRamp", (req, res) => {
   const { transactionId, amount, account } = req.body;
   if (!transactionId || !amount || !account) {
-    res.status(400).json({ error: 'transactionId, amount, and account are required' });
+    res
+      .status(400)
+      .json({ error: "transactionId, amount, and account are required" });
     return;
   }
 
   const success = Math.random() < 0.8;
   const status = success ? OnRampStatus.Success : OnRampStatus.Failure;
-  console.log(`Off-ramp processed: txn=${transactionId}, amount=${amount}, account=${account}, status=${status}`);
+  console.log(
+    `Off-ramp processed: txn=${transactionId}, amount=${amount}, account=${account}, status=${status}`,
+  );
   res.json({ status });
 });
 
-app.get('/onRamp/status/:token', (req, res) => {
+app.get("/onRamp/status/:token", (req, res) => {
   const token = req.params.token;
   const entry = pendingOnRamps.get(token);
   if (!entry) {
-    res.status(404).json({ error: 'Token not found' });
+    res.status(404).json({ error: "Token not found" });
     return;
   }
   res.json({ token, amount: entry.amount, status: entry.status });
@@ -94,31 +98,46 @@ const processOnRamps = () => {
     const payload = { token, status: newStatus, amount: entry.amount };
     const signature = signPayload(payload);
 
-    axios.post(entry.callbackUrl, payload, {
-      headers: { 'Content-Type': 'application/json', 'X-Bank-Signature': signature },
-      timeout: 10000,
-    })
-    .then(() => {
-      console.log(`Webhook delivered: token=${token}, status=${newStatus}`);
-      pendingOnRamps.set(token, { ...entry, status: newStatus, retryCount: 0 });
-    })
-    .catch((err) => {
-      console.error(`Webhook retry ${entry.retryCount + 1} failed for token=${token}:`, err.message);
-      entry.retryCount += 1;
-      if (entry.retryCount >= MAX_RETRIES) {
-        console.error(`Max retries reached for token=${token}, marking as Failure.`);
-        pendingOnRamps.set(token, { ...entry, status: OnRampStatus.Failure });
-      } else {
-        // leave status Processing; next interval will retry
-        pendingOnRamps.set(token, entry);
-      }
-    });
+    axios
+      .post(entry.callbackUrl, payload, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Bank-Signature": signature,
+        },
+        timeout: 10000,
+      })
+      .then(() => {
+        console.log(`Webhook delivered: token=${token}, status=${newStatus}`);
+        pendingOnRamps.set(token, {
+          ...entry,
+          status: newStatus,
+          retryCount: 0,
+        });
+      })
+      .catch((err) => {
+        console.error(
+          `Webhook retry ${entry.retryCount + 1} failed for token=${token}:`,
+          err.message,
+        );
+        entry.retryCount += 1;
+        if (entry.retryCount >= MAX_RETRIES) {
+          console.error(
+            `Max retries reached for token=${token}, marking as Failure.`,
+          );
+          pendingOnRamps.set(token, { ...entry, status: OnRampStatus.Failure });
+        } else {
+          // leave status Processing; next interval will retry
+          pendingOnRamps.set(token, entry);
+        }
+      });
   }
-};  
+};
 
 // runs every minute
-cron.schedule('* * * * *', () => {
+cron.schedule("* * * * *", () => {
   processOnRamps();
 });
 
-app.listen(port, () => console.log(`Mock bank server listening on port ${port}`));
+app.listen(port, () =>
+  console.log(`Mock bank server listening on port ${port}`),
+);

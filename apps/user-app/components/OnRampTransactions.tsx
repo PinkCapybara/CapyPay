@@ -1,20 +1,22 @@
-"use client"
+"use client";
 
-import { Card } from "@repo/ui/card"
-import { useAtomValue, useSetAtom } from "jotai"
-import { onRampTransactionsAtom ,fetchOnRampTransactionsAtom } from "@repo/store/transactions"
-import { TxnStatus } from "@repo/store/types"
-import { useEffect } from "react"
+import { Card } from "@repo/ui/card";
+import { useAtomValue, useSetAtom } from "jotai";
+import {
+  onRampTransactionsAtom,
+  fetchOnRampTransactionsAtom,
+} from "@repo/store/transactions";
+import { TxnStatus } from "@repo/store/types";
+import { useEffect } from "react";
 
 export const OnRampTransactions = () => {
   const transactions = useAtomValue(onRampTransactionsAtom);
   const refreshOnRampTransactions = useSetAtom(fetchOnRampTransactionsAtom);
 
   useEffect(() => {
-  
     const intervalId = setInterval(() => {
       refreshOnRampTransactions();
-    }, 15000); 
+    }, 15000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -30,17 +32,17 @@ export const OnRampTransactions = () => {
   }
 
   const statusClasses = (status: TxnStatus) => {
-  switch (status) {
-    case "Success":
-      return "bg-green-100 text-green-800";
-    case "Processing":
-      return "bg-yellow-100 text-yellow-800";
-    case "Failure":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
+    switch (status) {
+      case "Success":
+        return "bg-green-100 text-green-800";
+      case "Processing":
+        return "bg-yellow-100 text-yellow-800";
+      case "Failure":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
 
   return (
     <Card title="Recent Deposits" scrollHeight="md">
@@ -62,22 +64,22 @@ export const OnRampTransactions = () => {
                 </span>
               </div>
               <div className="text-slate-500 text-xs mt-0.5">
-                {new Date(t.time).toLocaleString('en-IN', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
+                {new Date(t.time).toLocaleString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
                 })}
               </div>
             </div>
 
             <div className="font-semibold text-sm text-green-600">
-              +₹{(t.amount / 100)}
+              +₹{t.amount / 100}
             </div>
           </div>
         ))}
       </div>
     </Card>
-  )
+  );
 };

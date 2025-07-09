@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 interface SelectInputProps {
   options: { value: string; label: string }[];
@@ -13,11 +13,13 @@ export const SelectInput = ({
   value,
   onChange,
   label,
-  className = ""
+  className = "",
 }: SelectInputProps) => {
   return (
     <div className={`pt-2 ${className}`}>
-      <label className="block mb-2 text-sm font-medium text-gray-900">{label}</label>
+      <label className="block mb-2 text-sm font-medium text-gray-900">
+        {label}
+      </label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}

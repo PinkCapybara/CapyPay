@@ -10,6 +10,8 @@
   "exports": {
     "./button": "./src/button.tsx",
     "./card": "./src/card.tsx",
+    "./ActionCard": "./src/ActionCard.tsx",
+    "./FeatureCard": "./src/FeatureCard.tsx",
     "./center": "./src/center.tsx",
     "./appbar": "./src/appbar.tsx",
     "./select": "./src/select.tsx",

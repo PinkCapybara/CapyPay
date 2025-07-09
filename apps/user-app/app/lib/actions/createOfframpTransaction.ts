@@ -1,30 +1,30 @@
 "use server";
 
-import prisma from '@repo/db/client';
-import redis from '@repo/redis/client';
-import { v4 as uuidv4 } from 'uuid';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth';
+import prisma from "@repo/db/client";
+import redis from "@repo/redis/client";
+import { v4 as uuidv4 } from "uuid";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth";
 
 export async function createOfframpTransaction(amount: number, vpa: string) {
   const session = await getServerSession(authOptions);
 
-    if (!session?.user || !session.user?.id) {
-        throw new Error('Unauthenticated request');
-    }
+  if (!session?.user || !session.user?.id) {
+    throw new Error("Unauthenticated request");
+  }
 
-  if (!amount || !vpa) throw new Error('Amount and VPA are required');
+  if (!amount || !vpa) throw new Error("Amount and VPA are required");
 
   const token = `offramp_${uuidv4()}`;
 
   try {
     const result = await prisma.$transaction(async (tx) => {
       const balance = await tx.balance.findUnique({
-        where: { userId: session.user.id }
+        where: { userId: session.user.id },
       });
 
       if (!balance || balance.amount < amount) {
-        throw new Error('Insufficient balance');
+        throw new Error("Insufficient balance");
       }
 
       // Lock the amount
@@ -36,10 +36,9 @@ export async function createOfframpTransaction(amount: number, vpa: string) {
         },
       });
 
-
       const transaction = await tx.offRampTransaction.create({
         data: {
-          status: 'Processing',
+          status: "Processing",
           token,
           vpa,
           amount,
@@ -51,10 +50,10 @@ export async function createOfframpTransaction(amount: number, vpa: string) {
       return transaction;
     });
 
-    await redis.lpush('offramp-queue', result.token);
+    await redis.lpush("offramp-queue", result.token);
 
     return result;
   } catch (err: any) {
-    throw new Error(err.message || 'Failed to create off-ramp transaction');
+    throw new Error(err.message || "Failed to create off-ramp transaction");
   }
 }

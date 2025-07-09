@@ -24,11 +24,11 @@ export interface P2PTransfer {
   status: TxnStatus;
   amount: number;
   time: Date;
-  fromUser: {id: string, name: string | null; email: string | null };
-  toUser: {id: string, name: string | null; email: string | null };
+  fromUser: { id: string; name: string | null; email: string | null };
+  toUser: { id: string; name: string | null; email: string | null };
 }
 
 export interface Balance {
-  amount: number; 
-  locked: number; 
+  amount: number;
+  locked: number;
 }

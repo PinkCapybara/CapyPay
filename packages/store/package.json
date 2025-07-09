@@ -16,5 +16,5 @@
     "./balance": "./src/atoms/balance.ts",
     "./transactions": "./src/atoms/transactions.ts",
     "./types": "./src/types/transactions.ts"
-}
+  }
 }
