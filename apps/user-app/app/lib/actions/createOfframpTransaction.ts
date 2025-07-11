@@ -8,16 +8,15 @@ import { authOptions } from "../auth";
 
 export async function createOfframpTransaction(amount: number, vpa: string) {
   const session = await getServerSession(authOptions);
-
-  if (!session?.user || !session.user?.id) {
-    throw new Error("Unauthenticated request");
-  }
-
-  if (!amount || !vpa) throw new Error("Amount and VPA are required");
-
-  const token = `offramp_${uuidv4()}`;
-
   try {
+    if (!session?.user || !session.user?.id) {
+      throw new Error("Unauthenticated request");
+    }
+
+    if (!amount || !vpa) throw new Error("Amount and VPA are required");
+
+    const token = `offramp_${uuidv4()}`;
+
     const result = await prisma.$transaction(async (tx) => {
       const balance = await tx.balance.findUnique({
         where: { userId: session.user.id },
@@ -50,14 +49,22 @@ export async function createOfframpTransaction(amount: number, vpa: string) {
       return transaction;
     });
 
-    await redis.lpush("offramp-queue", result.token);
+    await redis.rpush("offRamps", result.token);
 
-    return result;
+    return {
+      success: true,
+      message: "Off-ramp transaction created successfully",
+      txn: result,
+    };
   } catch (err: unknown) {
-    throw new Error(
-      err instanceof Error
-        ? err.message
-        : "Failed to create off-ramp transaction",
-    );
+    console.error("Off-ramp Transaction Error:", err);
+
+    return {
+      success: false,
+      message:
+        err instanceof Error
+          ? err.message
+          : "Failed to create offramp transaction",
+    };
   }
 }

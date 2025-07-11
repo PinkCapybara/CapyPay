@@ -2,7 +2,7 @@ import db from "@repo/db/client";
 import axios from "axios";
 
 export const sweepOnRamps = async () => {
-  console.log("on-Ramp sweep started");
+  console.log("... reconciling On-Ramps ...");
 
   const pendings = await db.onRampTransaction.findMany({
     where: { status: "Processing" },
@@ -18,6 +18,8 @@ export const sweepOnRamps = async () => {
       const { status }: { status: "Processing" | "Success" | "Failure" } =
         resp.data;
       if (status === "Processing") continue;
+
+      console.log(`Processing On-Ramp ${txn.token} with status: ${status}`);
 
       await db.$transaction(async (tx) => {
         await tx.$queryRaw`SELECT * FROM "OnRampTransaction" WHERE "id" = ${txn.id} FOR UPDATE`;
@@ -44,5 +46,4 @@ export const sweepOnRamps = async () => {
       );
     }
   }
-  console.log("On-Ramp sweep complete");
 };

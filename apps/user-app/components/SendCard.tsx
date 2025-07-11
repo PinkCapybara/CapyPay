@@ -68,13 +68,15 @@ export function SendCard() {
 
       const result = await p2pTransfer(recipient, amountValue, searchMethod);
 
-      if (result?.message) {
+      if (result.success) {
         toast.success(result.message);
 
         setRecipient("");
         setAmount("");
       } else {
-        toast.error("Transfer completed but no confirmation received");
+        toast.error(
+          result.message || "Transfer completed but no confirmation received",
+        );
       }
     } catch (error: unknown) {
       toast.error(

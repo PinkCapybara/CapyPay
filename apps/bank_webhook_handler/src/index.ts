@@ -1,7 +1,7 @@
 import express from "express";
 import crypto from "crypto";
 import db from "@repo/db/client";
-import cron from "node-cron";
+import schedule from "node-schedule";
 import { sweepOffRamps } from "./offRampSweeper";
 import { sweepOnRamps } from "./onRampSweeper";
 import dotenv from "dotenv";
@@ -15,12 +15,15 @@ app.use(express.json());
 
 app.post("/bankWebhook", async (req, res) => {
   const signature = req.get("X-Bank-Signature") || "";
+  console.log("Received webhook with signature:", signature);
   const payloadString = JSON.stringify(req.body);
+  console.log("Payload string:", payloadString);
   const expectedSig = crypto
     .createHmac("sha256", WEBHOOK_SECRET)
     .update(payloadString)
     .digest("hex");
 
+  console.log("Expected signature:", expectedSig);
   const sigMatch = crypto.timingSafeEqual(
     Buffer.from(signature),
     Buffer.from(expectedSig),
@@ -32,9 +35,9 @@ app.post("/bankWebhook", async (req, res) => {
 
   // 2) Extract and validate fields
   const { token, status } = req.body as {
-    token?: string;
-    status?: "Success" | "Failure";
-    amount?: number;
+    token: string;
+    status: "Success" | "Failure";
+    amount: number;
   };
   if (!token || !status) {
     res.status(400).json({ message: "token and status are required" });
@@ -46,6 +49,7 @@ app.post("/bankWebhook", async (req, res) => {
       where: { token },
       select: { id: true, userId: true, amount: true, status: true },
     });
+
     if (!txn) {
       res.status(404).json({ message: "Transaction not found" });
       return;
@@ -83,8 +87,8 @@ app.listen(PORT, () => {
   console.log(`bankWebhook listening on port ${PORT}`);
 });
 
-// schedule to run every minute
-cron.schedule("* * * * *", () => {
+// schedule to run every
+schedule.scheduleJob("*/40 * * * * *", async () => {
   sweepOffRamps().catch((err: unknown) =>
     console.log("OffRamp Sweeper crashed:", err),
   );

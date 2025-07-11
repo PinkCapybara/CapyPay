@@ -48,12 +48,21 @@ export const WithdrawMoney = () => {
     setIsLoading(true);
 
     try {
-      const txn = await createOfframpTransaction(amountValue, vpa);
+      const { success, message, txn } = await createOfframpTransaction(
+        amountValue,
+        vpa,
+      );
 
-      addOffRampTxn({
-        ...txn,
-        time: txn.startTime,
-      });
+      if (!success) {
+        throw new Error(message);
+      }
+
+      if (txn) {
+        addOffRampTxn({
+          ...txn,
+          time: txn.startTime,
+        });
+      }
 
       updateBalance((current) => ({
         amount: current.amount - amountValue,

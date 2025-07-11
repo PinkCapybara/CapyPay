@@ -68,7 +68,16 @@ export const DepositMoney = () => {
         });
       }
 
-      await createOnRampTransaction(response.data.token, provider, amountValue);
+      const result = await createOnRampTransaction(
+        response.data.token,
+        provider,
+        amountValue,
+      );
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message || "Failed to create onramp transaction");
+      }
     } catch (error: unknown) {
       toast.error(
         error instanceof Error ? error.message : "An unexpected error occurred",

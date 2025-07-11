@@ -9,7 +9,8 @@
     "check-types": "turbo run check-types",
     "foramt:check": "prettier --check \"apps/**/*.{ts,tsx,json}\" \"packages/**/*.{ts,tsx,json}\"",
     "format:fix": "prettier --write \"apps/**/*.{ts,tsx,json}\" \"packages/**/*.{ts,tsx,json}\"",
-    "prepare": "husky"
+    "db:generate": "cd packages/db && npx prisma generate",
+    "db:seed": "cd packages/db && npx prisma db seed"
   },
   "devDependencies": {
     "eslint": "^9.30.1",

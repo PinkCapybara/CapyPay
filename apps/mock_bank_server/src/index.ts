@@ -2,12 +2,23 @@
 
 import cors from "cors";
 import express from "express";
-import axios from "axios";
-import crypto from "crypto";
+import { Queue } from "bullmq";
 import { v4 as uuidv4 } from "uuid";
-import cron from "node-cron";
+import schedule from "node-schedule";
 import dotenv from "dotenv";
+import "./worker";
 dotenv.config();
+import redis from "@repo/redis/client";
+
+const onRampQueue = new Queue("onRampQueue", {
+  connection: redis,
+  defaultJobOptions: {
+    attempts: 3,
+    backoff: { type: "fixed", delay: 100000 },
+    removeOnComplete: true,
+    removeOnFail: false,
+  },
+});
 
 enum OnRampStatus {
   Processing = "Processing",
@@ -19,31 +30,19 @@ interface OnRampEntry {
   amount: number;
   status: OnRampStatus;
   callbackUrl: string;
-  retryCount: number;
 }
 
 const app = express();
 const port = 3004;
-const SECRET_KEY = process.env.BANK_WEBHOOK_SECRET || "default_secret_key";
 
 app.use(cors());
 app.use(express.json());
 
-// In-memory store for pending on-ramp transactions
-const pendingOnRamps = new Map<string, OnRampEntry>();
+app.get("/", (req, res) => {
+  res.send("Mock Bank Server is running");
+});
 
-// Compute HMAC signature
-function signPayload(payload: {
-  token: string;
-  status: OnRampStatus;
-  amount: number;
-}) {
-  const hmac = crypto.createHmac("sha256", SECRET_KEY);
-  hmac.update(JSON.stringify(payload));
-  return hmac.digest("hex");
-}
-
-app.post("/onRamp", (req, res) => {
+app.post("/onRamp", async (req, res) => {
   const { amount, callbackUrl } = req.body;
   if (!amount || !callbackUrl) {
     res.status(400).json({ error: "amount and callbackUrl are required" });
@@ -51,12 +50,12 @@ app.post("/onRamp", (req, res) => {
   }
 
   const token = `tok_${uuidv4()}`;
-  pendingOnRamps.set(token, {
+  const entry: OnRampEntry = {
     amount,
     status: OnRampStatus.Processing,
     callbackUrl,
-    retryCount: 0,
-  });
+  };
+  await redis.hset("onRamps", token, JSON.stringify(entry));
 
   console.log(`On-ramp initiated: token=${token}, amount=${amount}`);
   res.status(200).json({ token });
@@ -79,9 +78,12 @@ app.post("/offRamp", (req, res) => {
   res.json({ status });
 });
 
-app.get("/onRamp/status/:token", (req, res) => {
+app.get("/onRamp/status/:token", async (req, res) => {
   const token = req.params.token;
-  const entry = pendingOnRamps.get(token);
+  const ret = await redis.hget("onRamps", token);
+  const entry = ret ? (JSON.parse(ret) as OnRampEntry) : null;
+
+  console.log(`Checking status for token=${token} found entry:`, entry);
   if (!entry) {
     res.status(404).json({ error: "Token not found" });
     return;
@@ -89,57 +91,23 @@ app.get("/onRamp/status/:token", (req, res) => {
   res.json({ token, amount: entry.amount, status: entry.status });
 });
 
-// Background sweeper: process pending on-ramps
-const MAX_RETRIES = 5;
-const processOnRamps = () => {
-  console.log("sweeper running");
+schedule.scheduleJob("* * * * *", async () => {
+  console.log("enqueueing on-ramp jobs…");
+  const all = await redis.hgetall("onRamps");
 
-  for (const [token, entry] of pendingOnRamps.entries()) {
+  const onRamps = Object.entries(all).map(([token, json]) => [
+    token,
+    JSON.parse(json) as OnRampEntry,
+  ]) as [string, OnRampEntry][];
+  const pendingOnRamps = onRamps.filter(
+    ([, entry]) => entry.status === OnRampStatus.Processing,
+  );
+  console.log(`Found ${pendingOnRamps.length} pending on-ramps`);
+
+  for (const [token, entry] of pendingOnRamps) {
     if (entry.status !== OnRampStatus.Processing) continue;
-
-    const success = Math.random() < 0.8;
-    const newStatus = success ? OnRampStatus.Success : OnRampStatus.Failure;
-    const payload = { token, status: newStatus, amount: entry.amount };
-    const signature = signPayload(payload);
-
-    axios
-      .post(entry.callbackUrl, payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Bank-Signature": signature,
-        },
-        timeout: 10000,
-      })
-      .then(() => {
-        console.log(`Webhook delivered: token=${token}, status=${newStatus}`);
-        pendingOnRamps.set(token, {
-          ...entry,
-          status: newStatus,
-          retryCount: 0,
-        });
-      })
-      .catch((err) => {
-        console.error(
-          `Webhook retry ${entry.retryCount + 1} failed for token=${token}:`,
-          err.message,
-        );
-        entry.retryCount += 1;
-        if (entry.retryCount >= MAX_RETRIES) {
-          console.error(
-            `Max retries reached for token=${token}, marking as Failure.`,
-          );
-          pendingOnRamps.set(token, { ...entry, status: OnRampStatus.Failure });
-        } else {
-          // leave status Processing; next interval will retry
-          pendingOnRamps.set(token, entry);
-        }
-      });
+    onRampQueue.add(token, { token, entry }, { jobId: token });
   }
-};
-
-// runs every minute
-cron.schedule("* * * * *", () => {
-  processOnRamps();
 });
 
 app.listen(port, () =>

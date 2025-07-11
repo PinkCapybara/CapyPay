@@ -7,7 +7,11 @@ declare global {
   var __redisClient: Redis | undefined;
 }
 
-const client: Redis = global.__redisClient || new Redis(redisUrl);
+const client: Redis =
+  global.__redisClient ||
+  new Redis(redisUrl, {
+    maxRetriesPerRequest: null, // Required for BullMQ
+  });
 
 if (process.env.NODE_ENV === "development") {
   global.__redisClient = client;
